@@ -17,25 +17,50 @@ export default function ChatInput({ onSend, disabled }: Props) {
   };
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 bg-black/80 backdrop-blur p-3 border-t border-white/10">
-      <div className="max-w-3xl mx-auto flex gap-2">
-        
-        <input
-          value={text}
-          onChange={(e) => setText(e.target.value)}
-          placeholder="Ketik pesan kamu di sini..."
-          className="flex-1 bg-white/5 border border-white/10 rounded-full px-4 py-3 text-white outline-none"
-          disabled={disabled}
-        />
+    <div className="fixed bottom-0 left-0 right-0 z-30 border-t border-white/5 bg-[#0a0a0f]/80 px-3 py-4 backdrop-blur-xl">
+      <div className="mx-auto max-w-4xl">
+        <div className="flex items-end gap-2 rounded-[28px] border border-white/10 bg-white/[0.04] p-2 shadow-[0_0_40px_rgba(124,58,237,0.10)]">
+          <button
+            type="button"
+            className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-[#7c3aed] text-2xl text-white"
+          >
+            +
+          </button>
 
-        <button
-          onClick={handleSend}
-          disabled={disabled}
-          className="bg-purple-600 px-5 rounded-full text-white"
-        >
-          Kirim
-        </button>
+          <textarea
+            value={text}
+            onChange={(e) => setText(e.target.value)}
+            placeholder="Ketik pesan kamu di sini..."
+            rows={1}
+            disabled={disabled}
+            className="max-h-40 min-h-[48px] flex-1 resize-none bg-transparent px-2 py-3 text-white outline-none placeholder:text-white/35"
+            onKeyDown={(e) => {
+              if (e.key === "Enter" && !e.shiftKey) {
+                e.preventDefault();
+                handleSend();
+              }
+            }}
+          />
 
+          <button
+            type="button"
+            className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-white/5 text-lg text-white"
+          >
+            🎤
+          </button>
+
+          <button
+            onClick={handleSend}
+            disabled={disabled}
+            className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-[#7c3aed] text-lg text-white disabled:opacity-50"
+          >
+            ↑
+          </button>
+        </div>
+
+        <p className="mt-3 text-center text-xs text-white/35">
+          Xinn AI dapat membuat kesalahan. Periksa info penting.
+        </p>
       </div>
     </div>
   );
