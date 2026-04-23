@@ -1,6 +1,4 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
 
 html,
 body {
@@ -21,6 +19,16 @@ body {
     radial-gradient(circle at 50% 20%, rgba(124, 58, 237, 0.22), transparent 22%),
     radial-gradient(circle at 50% 50%, rgba(91, 33, 182, 0.12), transparent 30%),
     linear-gradient(to bottom, #09090f, #050507 50%, #08080d);
+}
+
+img {
+  display: block;
+}
+
+button,
+input,
+textarea {
+  font: inherit;
 }
 
 ::-webkit-scrollbar {
