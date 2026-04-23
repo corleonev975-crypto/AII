@@ -5,7 +5,7 @@ export default function WelcomeScreen() {
         Xinn <span className="text-purple-400">AI</span>
       </h1>
       <p className="text-white/50 mt-2">
-        Aku adalah Xinn AI, siap membantu kamu 🚀
+        AI siap membantu kamu 🚀
       </p>
     </div>
   );
