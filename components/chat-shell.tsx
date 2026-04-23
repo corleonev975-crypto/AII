@@ -18,12 +18,12 @@ export default function ChatShell() {
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages]);
+  }, [messages, loading]);
 
   const sendMessage = async (text: string, image?: string) => {
     if (!text.trim() && !image) return;
 
-    const newMessages = [
+    const newMessages: Message[] = [
       ...messages,
       { role: "user", content: text, image },
     ];
@@ -34,6 +34,9 @@ export default function ChatShell() {
     try {
       const res = await fetch("/api/chat", {
         method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
         body: JSON.stringify({ message: text, image }),
       });
 
@@ -41,38 +44,46 @@ export default function ChatShell() {
 
       setMessages([
         ...newMessages,
-        { role: "assistant", content: data.reply },
+        {
+          role: "assistant",
+          content: data.reply || "Tidak ada balasan",
+        },
       ]);
     } catch {
       setMessages([
         ...newMessages,
-        { role: "assistant", content: "Error AI" },
+        {
+          role: "assistant",
+          content: "Terjadi error",
+        },
       ]);
+    } finally {
+      setLoading(false);
     }
-
-    setLoading(false);
   };
 
   return (
     <div className="flex h-screen flex-col bg-black text-white">
-      <div className="flex-1 overflow-y-auto p-4 space-y-4">
-        {messages.length === 0 && <WelcomeScreen />}
+      <div className="flex-1 overflow-y-auto p-4">
+        <div className="mx-auto max-w-3xl space-y-4">
+          {messages.length === 0 && <WelcomeScreen />}
 
-        {messages.map((msg, i) => (
-          <MessageBubble
-            key={i}
-            role={msg.role}
-            content={msg.content}
-            image={msg.image}
-          />
-        ))}
+          {messages.map((msg, i) => (
+            <MessageBubble
+              key={i}
+              role={msg.role}
+              content={msg.content}
+              image={msg.image}
+            />
+          ))}
 
-        {loading && <p>Typing...</p>}
+          {loading && <p className="text-white/50">Typing...</p>}
 
-        <div ref={bottomRef} />
+          <div ref={bottomRef} />
+        </div>
       </div>
 
-      <ChatInput onSend={sendMessage} />
+      <ChatInput onSend={sendMessage} disabled={loading} />
     </div>
   );
-}
+            }
