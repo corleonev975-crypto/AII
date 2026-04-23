@@ -24,12 +24,16 @@ export default function ChatShell() {
   const sendMessage = async (text: string, image?: string) => {
     if (!text.trim() && !image) return;
 
-    const newMessages: Message[] = [
+    const nextMessages: Message[] = [
       ...messages,
-      { role: "user", content: text || "Jelaskan gambar ini", image },
+      {
+        role: "user",
+        content: text || "Jelaskan gambar ini",
+        image,
+      },
     ];
 
-    setMessages(newMessages);
+    setMessages(nextMessages);
     setLoading(true);
 
     try {
@@ -47,7 +51,7 @@ export default function ChatShell() {
       const data = await res.json();
 
       setMessages([
-        ...newMessages,
+        ...nextMessages,
         {
           role: "assistant",
           content: data.reply || "Tidak ada balasan",
@@ -55,7 +59,7 @@ export default function ChatShell() {
       ]);
     } catch {
       setMessages([
-        ...newMessages,
+        ...nextMessages,
         {
           role: "assistant",
           content: "Terjadi error saat menghubungi AI.",
@@ -67,16 +71,16 @@ export default function ChatShell() {
   };
 
   return (
-    <div className="relative flex h-screen overflow-hidden bg-[#05050a] text-white">
+    <div className="relative h-screen overflow-hidden bg-[#05050a] text-white">
       {sidebarOpen && (
         <button
-          className="fixed inset-0 z-30 bg-black/40 md:hidden"
+          className="fixed inset-0 z-30 bg-black/35 md:hidden"
           onClick={() => setSidebarOpen(false)}
         />
       )}
 
       <aside
-        className={`fixed left-0 top-0 z-40 h-full w-[300px] border-r border-white/10 bg-[#090910]/95 backdrop-blur-xl transition-transform duration-300 md:static md:translate-x-0 ${
+        className={`fixed left-0 top-0 z-40 h-full w-[305px] border-r border-white/10 bg-[#090910]/95 backdrop-blur-xl transition-transform duration-300 ${
           sidebarOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       >
@@ -89,7 +93,7 @@ export default function ChatShell() {
 
             <button
               onClick={() => setSidebarOpen(false)}
-              className="text-3xl text-white/80 md:hidden"
+              className="text-3xl text-white/80"
             >
               ✕
             </button>
@@ -120,7 +124,7 @@ export default function ChatShell() {
         </div>
       </aside>
 
-      <main className="flex min-w-0 flex-1 flex-col">
+      <main className="flex h-full flex-col">
         <div className="sticky top-0 z-20 flex items-center justify-between px-4 py-5">
           <button
             onClick={() => setSidebarOpen(true)}
@@ -170,4 +174,4 @@ export default function ChatShell() {
       </main>
     </div>
   );
-            }
+        }
