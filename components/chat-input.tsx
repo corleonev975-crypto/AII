@@ -48,6 +48,7 @@ export default function ChatInput({ onSend, disabled = false }: Props) {
     if (!text.trim() && !preview) return;
 
     onSend(text || "Jelaskan gambar ini", preview || undefined);
+
     setText("");
     setPreview(null);
     setPreviewName("");
@@ -107,90 +108,91 @@ export default function ChatInput({ onSend, disabled = false }: Props) {
   };
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 z-50 px-4 pb-5">
+    <div className="fixed bottom-0 left-0 right-0 z-50 px-3 pb-3">
       <div className="mx-auto max-w-4xl">
         {menuOpen && (
-          <div className="mb-3 w-[260px] rounded-[28px] border border-white/10 bg-[#14141a]/95 p-3 shadow-2xl backdrop-blur-xl">
+          <div className="mb-3 w-[240px] rounded-[26px] border border-white/10 bg-[#14141a]/95 p-2 shadow-2xl backdrop-blur-xl">
             <button
               onClick={() => fileRef.current?.click()}
-              className="flex w-full items-center gap-4 rounded-2xl px-4 py-4 text-left text-white hover:bg-white/10"
+              className="flex w-full items-center gap-3 rounded-2xl px-4 py-3 text-left text-white hover:bg-white/10"
             >
-              <span className="text-3xl">📎</span>
+              <span className="text-2xl">📎</span>
               <div>
-                <p className="text-[20px]">Tambah file</p>
-                <p className="text-sm text-white/45">PDF, DOC, TXT, ZIP</p>
+                <p className="text-[17px]">Tambah file</p>
+                <p className="text-xs text-white/45">PDF, DOC, TXT, ZIP</p>
               </div>
             </button>
 
             <button
               onClick={() => cameraRef.current?.click()}
-              className="flex w-full items-center gap-4 rounded-2xl px-4 py-4 text-left text-white hover:bg-white/10"
+              className="flex w-full items-center gap-3 rounded-2xl px-4 py-3 text-left text-white hover:bg-white/10"
             >
-              <span className="text-3xl">📷</span>
+              <span className="text-2xl">📷</span>
               <div>
-                <p className="text-[20px]">Ambil foto</p>
-                <p className="text-sm text-white/45">Gunakan kamera</p>
+                <p className="text-[17px]">Ambil foto</p>
+                <p className="text-xs text-white/45">Gunakan kamera</p>
               </div>
             </button>
 
             <button
               onClick={() => fileRef.current?.click()}
-              className="flex w-full items-center gap-4 rounded-2xl px-4 py-4 text-left text-white hover:bg-white/10"
+              className="flex w-full items-center gap-3 rounded-2xl px-4 py-3 text-left text-white hover:bg-white/10"
             >
-              <span className="text-3xl">🖼️</span>
+              <span className="text-2xl">🖼️</span>
               <div>
-                <p className="text-[20px]">Pilih foto</p>
-                <p className="text-sm text-white/45">Dari galeri</p>
+                <p className="text-[17px]">Pilih foto</p>
+                <p className="text-xs text-white/45">Dari galeri</p>
               </div>
             </button>
 
             <button
               onClick={handleVoice}
-              className="flex w-full items-center gap-4 rounded-2xl px-4 py-4 text-left text-white hover:bg-white/10"
+              className="flex w-full items-center gap-3 rounded-2xl px-4 py-3 text-left text-white hover:bg-white/10"
             >
-              <span className="text-3xl">🎤</span>
+              <span className="text-2xl">🎤</span>
               <div>
-                <p className="text-[20px]">Voice input</p>
-                <p className="text-sm text-white/45">Bicara dengan AI</p>
+                <p className="text-[17px]">Voice input</p>
+                <p className="text-xs text-white/45">Bicara dengan AI</p>
               </div>
             </button>
           </div>
         )}
 
         {listening && (
-          <div className="mb-3 flex items-center justify-between rounded-[28px] border border-white/10 bg-[#14141a]/95 px-4 py-4 backdrop-blur-xl">
+          <div className="mb-3 flex items-center justify-between rounded-[24px] border border-white/10 bg-[#14141a]/95 px-4 py-3 backdrop-blur-xl">
             <div className="flex items-center gap-3">
-              <div className="flex h-12 w-12 items-center justify-center rounded-full bg-[#6d28d9] text-white">
+              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#6d28d9] text-white">
                 〰️
               </div>
               <div>
-                <p className="text-white">Mendengarkan...</p>
-                <p className="text-sm text-white/50">{formatTime(seconds)}</p>
+                <p className="text-sm text-white">Mendengarkan...</p>
+                <p className="text-xs text-white/50">{formatTime(seconds)}</p>
               </div>
             </div>
 
-            <button className="flex h-12 w-12 items-center justify-center rounded-full bg-red-600 text-white">
+            <button className="flex h-10 w-10 items-center justify-center rounded-full bg-red-600 text-white">
               ■
             </button>
           </div>
         )}
 
         {(preview || uploading) && (
-          <div className="mb-3 flex items-center justify-between rounded-[28px] border border-white/10 bg-[#14141a]/95 px-4 py-4 backdrop-blur-xl">
+          <div className="mb-3 flex items-center justify-between rounded-[24px] border border-white/10 bg-[#14141a]/95 px-4 py-3 backdrop-blur-xl">
             <div className="flex min-w-0 items-center gap-3">
-              <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-[#6d28d9] text-white">
+              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-[#6d28d9] text-white">
                 🖼️
               </div>
 
               <div className="min-w-0">
-                <p className="truncate text-white">
+                <p className="truncate text-sm text-white">
                   {previewName || "IMG_UPLOAD.jpg"}
                 </p>
-                <p className="text-sm text-white/50">
-                  {previewSize || "2.4 MB"} • {uploading ? "Mengupload..." : "Siap dikirim"}
+                <p className="text-xs text-white/50">
+                  {previewSize || "2.4 MB"} •{" "}
+                  {uploading ? "Mengupload..." : "Siap dikirim"}
                 </p>
 
-                <div className="mt-2 h-1.5 w-40 overflow-hidden rounded-full bg-white/10">
+                <div className="mt-2 h-1.5 w-36 overflow-hidden rounded-full bg-white/10">
                   <div
                     className={`h-full rounded-full bg-[#9333ea] ${
                       uploading ? "w-3/4" : "w-full"
@@ -207,17 +209,17 @@ export default function ChatInput({ onSend, disabled = false }: Props) {
                 setPreviewSize("");
                 setUploading(false);
               }}
-              className="flex h-10 w-10 items-center justify-center rounded-full bg-white/5 text-white"
+              className="flex h-9 w-9 items-center justify-center rounded-full bg-white/5 text-white"
             >
               ✕
             </button>
           </div>
         )}
 
-        <div className="flex items-center gap-3 rounded-full border border-white/10 bg-[#15151c]/95 px-3 py-3 shadow-[0_0_30px_rgba(0,0,0,0.35)] backdrop-blur-xl">
+        <div className="flex items-center gap-2 rounded-full border border-white/10 bg-[#15151c]/95 px-2 py-2 shadow-[0_0_30px_rgba(0,0,0,0.35)] backdrop-blur-xl">
           <button
             onClick={() => setMenuOpen((p) => !p)}
-            className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-[#6d28d9] text-[30px] leading-none text-white"
+            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#6d28d9] text-[22px] leading-none text-white"
           >
             +
           </button>
@@ -244,7 +246,7 @@ export default function ChatInput({ onSend, disabled = false }: Props) {
             onChange={(e) => setText(e.target.value)}
             placeholder="Balas ke Xinn AI"
             disabled={disabled}
-            className="h-12 flex-1 bg-transparent text-[18px] text-white outline-none placeholder:text-white/35"
+            className="h-10 flex-1 bg-transparent px-1 text-[16px] text-white outline-none placeholder:text-white/35"
             onKeyDown={(e) => {
               if (e.key === "Enter") {
                 e.preventDefault();
@@ -255,7 +257,7 @@ export default function ChatInput({ onSend, disabled = false }: Props) {
 
           <button
             onClick={handleVoice}
-            className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-transparent text-white"
+            className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-transparent text-white"
           >
             🎤
           </button>
@@ -263,7 +265,7 @@ export default function ChatInput({ onSend, disabled = false }: Props) {
           <button
             onClick={handleSend}
             disabled={disabled}
-            className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-white text-black disabled:opacity-50"
+            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-white text-black disabled:opacity-50"
           >
             ↑
           </button>
@@ -271,4 +273,4 @@ export default function ChatInput({ onSend, disabled = false }: Props) {
       </div>
     </div>
   );
-      }
+    }
