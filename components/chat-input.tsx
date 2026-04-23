@@ -271,4 +271,4 @@ export default function ChatInput({ onSend, disabled = false }: Props) {
       </div>
     </div>
   );
-    }
+      }
