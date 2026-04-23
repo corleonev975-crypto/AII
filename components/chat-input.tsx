@@ -170,7 +170,10 @@ export default function ChatInput({ onSend, disabled = false }: Props) {
               </div>
             </div>
 
-            <button className="flex h-10 w-10 items-center justify-center rounded-full bg-red-600 text-white">
+            <button
+              onClick={() => setListening(false)}
+              className="flex h-10 w-10 items-center justify-center rounded-full bg-red-600 text-white"
+            >
               ■
             </button>
           </div>
@@ -216,7 +219,7 @@ export default function ChatInput({ onSend, disabled = false }: Props) {
           </div>
         )}
 
-        <div className="flex items-center gap-2 rounded-full border border-white/10 bg-[#15151c]/95 px-2 py-2 shadow-[0_0_30px_rgba(0,0,0,0.35)] backdrop-blur-xl">
+        <div className="flex items-center gap-2 rounded-full border border-white/10 bg-[#15151c]/92 px-2 py-2 shadow-[0_0_25px_rgba(0,0,0,0.32)] backdrop-blur-xl">
           <button
             onClick={() => setMenuOpen((p) => !p)}
             className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#6d28d9] text-[22px] leading-none text-white"
@@ -257,7 +260,7 @@ export default function ChatInput({ onSend, disabled = false }: Props) {
 
           <button
             onClick={handleVoice}
-            className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-transparent text-white"
+            className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-transparent text-white/80"
           >
             🎤
           </button>
@@ -273,4 +276,4 @@ export default function ChatInput({ onSend, disabled = false }: Props) {
       </div>
     </div>
   );
-    }
+                      }
