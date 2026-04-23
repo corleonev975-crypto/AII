@@ -14,8 +14,21 @@ type Message = {
 export default function ChatShell() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [loading, setLoading] = useState(false);
-  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   const bottomRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const saved = localStorage.getItem("xinn_messages");
+    if (saved) {
+      try {
+        setMessages(JSON.parse(saved));
+      } catch {}
+    }
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem("xinn_messages", JSON.stringify(messages));
+  }, [messages]);
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -54,7 +67,7 @@ export default function ChatShell() {
         ...nextMessages,
         {
           role: "assistant",
-          content: data.reply || "Tidak ada balasan",
+          content: data.reply || "Tidak ada balasan.",
         },
       ]);
     } catch {
@@ -70,25 +83,31 @@ export default function ChatShell() {
     }
   };
 
+  const clearChat = () => {
+    setMessages([]);
+    localStorage.removeItem("xinn_messages");
+    setSidebarOpen(false);
+  };
+
   return (
     <div className="relative h-screen overflow-hidden bg-[#05050a] text-white">
       {sidebarOpen && (
         <button
-          className="fixed inset-0 z-30 bg-black/35 md:hidden"
+          className="fixed inset-0 z-30 bg-black/45 md:hidden"
           onClick={() => setSidebarOpen(false)}
         />
       )}
 
       <aside
-        className={`fixed left-0 top-0 z-40 h-full w-[305px] border-r border-white/10 bg-[#090910]/95 backdrop-blur-xl transition-transform duration-300 ${
+        className={`fixed left-0 top-0 z-40 h-full w-[285px] border-r border-white/10 bg-[#090910]/95 backdrop-blur-xl transition-transform duration-300 ${
           sidebarOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       >
         <div className="flex h-full flex-col p-4">
           <div className="mb-6 flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <div className="h-4 w-4 rounded-full bg-purple-500 shadow-[0_0_20px_rgba(168,85,247,0.9)]" />
-              <p className="tracking-[0.4em] text-white">XINN AI</p>
+              <div className="h-3.5 w-3.5 rounded-full bg-purple-500 shadow-[0_0_16px_rgba(168,85,247,0.95)]" />
+              <p className="tracking-[0.35em] text-white">XINN AI</p>
             </div>
 
             <button
@@ -99,25 +118,28 @@ export default function ChatShell() {
             </button>
           </div>
 
-          <button className="mb-5 rounded-[24px] bg-[#6d28d9] px-5 py-5 text-left text-[18px] text-white shadow-[0_0_30px_rgba(109,40,217,0.35)]">
+          <button
+            onClick={clearChat}
+            className="mb-4 rounded-[22px] bg-[#6d28d9] px-5 py-4 text-left text-[17px] text-white shadow-[0_0_24px_rgba(109,40,217,0.35)]"
+          >
             + Chat baru
           </button>
 
           <input
             placeholder="Cari chat..."
-            className="mb-5 rounded-[20px] border border-white/10 bg-transparent px-4 py-4 text-[17px] text-white outline-none placeholder:text-white/35"
+            className="mb-4 rounded-[18px] border border-white/10 bg-transparent px-4 py-3.5 text-[15px] text-white outline-none placeholder:text-white/35"
           />
 
-          <div className="rounded-[20px] border border-white/10 bg-white/[0.03] px-4 py-4 text-[18px] text-white">
+          <div className="rounded-[18px] border border-white/10 bg-white/[0.03] px-4 py-3.5 text-[16px] text-white/90">
             Chat baru
           </div>
 
-          <div className="mt-auto space-y-4">
-            <button className="w-full rounded-[20px] border border-white/10 bg-white/[0.03] px-4 py-5 text-[18px] text-white">
+          <div className="mt-auto space-y-3">
+            <button className="w-full rounded-[18px] border border-white/10 bg-white/[0.03] px-4 py-4 text-[16px] text-white">
               Upgrade
             </button>
 
-            <button className="w-full rounded-[20px] border border-white/10 bg-white/[0.03] px-4 py-5 text-[18px] text-white">
+            <button className="w-full rounded-[18px] border border-white/10 bg-white/[0.03] px-4 py-4 text-[16px] text-white">
               Login
             </button>
           </div>
@@ -125,53 +147,65 @@ export default function ChatShell() {
       </aside>
 
       <main className="flex h-full flex-col">
-        <div className="sticky top-0 z-20 flex items-center justify-between px-4 py-5">
-          <button
-            onClick={() => setSidebarOpen(true)}
-            className="text-4xl text-white"
-          >
-            ☰
-          </button>
+        <header className="sticky top-0 z-20 border-b border-white/5 bg-transparent">
+          <div className="flex items-center justify-between px-4 py-5">
+            <button
+              onClick={() => setSidebarOpen(true)}
+              className="text-[30px] leading-none text-white"
+            >
+              ☰
+            </button>
 
-          <h1 className="text-[18px] tracking-[0.45em] text-white">XINN AI</h1>
+            <h1 className="text-[17px] tracking-[0.42em] text-white/95">
+              XINN AI
+            </h1>
 
-          <div className="flex items-center gap-2">
-            <img
-              src="/avatar.gif"
-              alt="avatar"
-              className="h-16 w-16 rounded-full object-cover ring-1 ring-purple-500/50"
-            />
-            <span className="text-2xl text-white">⌄</span>
+            <div className="flex items-center gap-2">
+              <img
+                src="/avatar.gif"
+                alt="avatar"
+                className="h-14 w-14 rounded-full object-cover ring-1 ring-purple-500/50"
+              />
+              <span className="text-xl text-white/90">˅</span>
+            </div>
           </div>
-        </div>
+        </header>
 
-        <div className="flex-1 overflow-y-auto px-4 pb-40 pt-2">
-          <div className="mx-auto flex max-w-4xl flex-col gap-4">
+        <section className="flex-1 overflow-y-auto px-4 pb-28 pt-2">
+          <div className="mx-auto flex max-w-3xl flex-col gap-4">
             {messages.length === 0 && <WelcomeScreen />}
 
             {messages.map((msg, i) => (
-              <MessageBubble
+              <div
                 key={i}
-                role={msg.role}
-                content={msg.content}
-                image={msg.image}
-              />
+                className="animate-[fadeInUp_.28s_ease]"
+              >
+                <MessageBubble
+                  role={msg.role}
+                  content={msg.content}
+                  image={msg.image}
+                />
+              </div>
             ))}
 
             {loading && (
-              <div className="flex justify-start">
-                <div className="rounded-3xl border border-white/10 bg-white/[0.04] px-4 py-3 text-white/60">
-                  Typing...
+              <div className="animate-[fadeInUp_.25s_ease] flex justify-start">
+                <div className="rounded-3xl rounded-tl-md border border-white/10 bg-white/[0.04] px-4 py-3">
+                  <div className="flex gap-1">
+                    <span className="h-2 w-2 animate-bounce rounded-full bg-white/45"></span>
+                    <span className="h-2 w-2 animate-bounce rounded-full bg-white/45 [animation-delay:0.15s]"></span>
+                    <span className="h-2 w-2 animate-bounce rounded-full bg-white/45 [animation-delay:0.3s]"></span>
+                  </div>
                 </div>
               </div>
             )}
 
             <div ref={bottomRef} />
           </div>
-        </div>
+        </section>
 
         <ChatInput onSend={sendMessage} disabled={loading} />
       </main>
     </div>
   );
-        }
+                   }
