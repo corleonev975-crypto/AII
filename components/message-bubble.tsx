@@ -9,9 +9,19 @@ export default function MessageBubble({ role, content, image }: Props) {
 
   return (
     <div className={`flex ${isUser ? "justify-end" : "justify-start"}`}>
-      <div className="max-w-[80%] rounded-xl bg-white/10 p-3">
+      <div
+        className={`max-w-[82%] rounded-3xl px-4 py-3 text-[16px] leading-8 ${
+          isUser
+            ? "bg-[#6d28d9] text-white"
+            : "border border-white/10 bg-white/[0.04] text-white"
+        }`}
+      >
         {image && (
-          <img src={image} className="mb-2 max-h-60 rounded-lg" />
+          <img
+            src={image}
+            alt="upload"
+            className="mb-3 max-h-72 rounded-2xl object-cover"
+          />
         )}
         <p>{content}</p>
       </div>
