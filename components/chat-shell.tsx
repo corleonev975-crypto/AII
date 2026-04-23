@@ -93,26 +93,26 @@ export default function ChatShell() {
     <div className="relative h-screen overflow-hidden bg-[#05050a] text-white">
       {sidebarOpen && (
         <button
-          className="fixed inset-0 z-30 bg-black/45 md:hidden"
+          className="fixed inset-0 z-30 bg-black/50 backdrop-blur-[1px] md:hidden"
           onClick={() => setSidebarOpen(false)}
         />
       )}
 
       <aside
-        className={`fixed left-0 top-0 z-40 h-full w-[285px] border-r border-white/10 bg-[#090910]/95 backdrop-blur-xl transition-transform duration-300 ${
+        className={`fixed left-0 top-0 z-40 h-full w-[290px] border-r border-white/10 bg-[#090910]/96 shadow-[0_0_50px_rgba(0,0,0,0.45)] backdrop-blur-2xl transition-transform duration-300 ease-out ${
           sidebarOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       >
         <div className="flex h-full flex-col p-4">
           <div className="mb-6 flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <div className="h-3.5 w-3.5 rounded-full bg-purple-500 shadow-[0_0_16px_rgba(168,85,247,0.95)]" />
+              <div className="h-3.5 w-3.5 rounded-full bg-purple-500 shadow-[0_0_18px_rgba(168,85,247,0.95)]" />
               <p className="tracking-[0.35em] text-white">XINN AI</p>
             </div>
 
             <button
               onClick={() => setSidebarOpen(false)}
-              className="text-3xl text-white/80"
+              className="text-3xl leading-none text-white/80"
             >
               ✕
             </button>
@@ -120,7 +120,7 @@ export default function ChatShell() {
 
           <button
             onClick={clearChat}
-            className="mb-4 rounded-[22px] bg-[#6d28d9] px-5 py-4 text-left text-[17px] text-white shadow-[0_0_24px_rgba(109,40,217,0.35)]"
+            className="mb-4 rounded-[22px] bg-[#6d28d9] px-5 py-4 text-left text-[17px] text-white shadow-[0_0_24px_rgba(109,40,217,0.35)] transition hover:bg-[#7c3aed]"
           >
             + Chat baru
           </button>
@@ -130,16 +130,18 @@ export default function ChatShell() {
             className="mb-4 rounded-[18px] border border-white/10 bg-transparent px-4 py-3.5 text-[15px] text-white outline-none placeholder:text-white/35"
           />
 
-          <div className="rounded-[18px] border border-white/10 bg-white/[0.03] px-4 py-3.5 text-[16px] text-white/90">
-            Chat baru
+          <div className="space-y-2">
+            <button className="w-full rounded-[18px] border border-white/10 bg-white/[0.03] px-4 py-3.5 text-left text-[15px] text-white/90 transition hover:bg-white/[0.06]">
+              Chat baru
+            </button>
           </div>
 
           <div className="mt-auto space-y-3">
-            <button className="w-full rounded-[18px] border border-white/10 bg-white/[0.03] px-4 py-4 text-[16px] text-white">
+            <button className="w-full rounded-[18px] border border-white/10 bg-white/[0.03] px-4 py-4 text-[16px] text-white transition hover:bg-white/[0.06]">
               Upgrade
             </button>
 
-            <button className="w-full rounded-[18px] border border-white/10 bg-white/[0.03] px-4 py-4 text-[16px] text-white">
+            <button className="w-full rounded-[18px] border border-white/10 bg-white/[0.03] px-4 py-4 text-[16px] text-white transition hover:bg-white/[0.06]">
               Login
             </button>
           </div>
@@ -147,11 +149,11 @@ export default function ChatShell() {
       </aside>
 
       <main className="flex h-full flex-col">
-        <header className="sticky top-0 z-20 border-b border-white/5 bg-transparent">
+        <header className="sticky top-0 z-20 bg-transparent">
           <div className="flex items-center justify-between px-4 py-5">
             <button
               onClick={() => setSidebarOpen(true)}
-              className="text-[30px] leading-none text-white"
+              className="text-[28px] leading-none text-white"
             >
               ☰
             </button>
@@ -176,10 +178,7 @@ export default function ChatShell() {
             {messages.length === 0 && <WelcomeScreen />}
 
             {messages.map((msg, i) => (
-              <div
-                key={i}
-                className="animate-[fadeInUp_.28s_ease]"
-              >
+              <div key={i} className="animate-[fadeInUp_.28s_ease]">
                 <MessageBubble
                   role={msg.role}
                   content={msg.content}
@@ -208,4 +207,4 @@ export default function ChatShell() {
       </main>
     </div>
   );
-                   }
+}
