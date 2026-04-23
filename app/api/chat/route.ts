@@ -1,89 +1,76 @@
-import Groq from 'groq-sdk';
-import { NextResponse } from 'next/server';
+import { NextResponse } from "next/server";
 
-type Attachment = {
-  type: 'image';
-  mimeType: string;
-  dataUrl: string;
-  name?: string;
-};
-
-type IncomingMessage = {
-  role: 'user' | 'assistant';
-  content: string;
-  attachments?: Attachment[];
-};
-
-const apiKey = process.env.GROQ_API_KEY;
-
-export async function POST(request: Request) {
-  if (!apiKey) {
-    return NextResponse.json(
-      {
-        error: 'GROQ_API_KEY belum diisi. Tambahkan ke file .env.local lalu restart server.'
-      },
-      { status: 500 }
-    );
-  }
-
+export async function POST(req: Request) {
   try {
-    const body = (await request.json()) as { messages?: IncomingMessage[] };
-    const incomingMessages = body.messages ?? [];
+    const { message, image } = await req.json();
 
-    if (incomingMessages.length === 0) {
-      return NextResponse.json({ error: 'Pesan kosong.' }, { status: 400 });
+    const apiKey = process.env.GROQ_API_KEY;
+
+    if (!apiKey) {
+      return NextResponse.json(
+        { reply: "API KEY belum diisi" },
+        { status: 500 }
+      );
     }
 
-    const hasImage = incomingMessages.some((message) => message.attachments?.some((item) => item.type === 'image'));
-    const groq = new Groq({ apiKey });
+    let messages;
 
-    const chatMessages = [
-      {
-        role: 'system' as const,
-        content:
-          process.env.SYSTEM_PROMPT ||
-          'Kamu adalah Xinn AI, asisten AI yang cerdas, natural, sopan, dan membantu. Jawab default dalam Bahasa Indonesia kecuali user memakai bahasa lain.'
-      },
-      ...incomingMessages.map((message) => {
-        if (message.attachments?.length) {
-          return {
-            role: message.role,
-            content: [
-              {
-                type: 'text' as const,
-                text: message.content || 'Analisis gambar ini.'
+    // 👉 FIX STRUCTURE DI SINI
+    if (image) {
+      messages = [
+        {
+          role: "user",
+          content: [
+            {
+              type: "text",
+              text: message || "Jelaskan gambar ini",
+            },
+            {
+              type: "image_url",
+              image_url: {
+                url: image,
               },
-              ...message.attachments.map((attachment) => ({
-                type: 'image_url' as const,
-                image_url: {
-                  url: attachment.dataUrl
-                }
-              }))
-            ]
-          };
-        }
+            },
+          ],
+        },
+      ];
+    } else {
+      messages = [
+        {
+          role: "user",
+          content: message,
+        },
+      ];
+    }
 
-        return {
-          role: message.role,
-          content: message.content
-        };
-      })
-    ];
+    const res = await fetch(
+      "https://api.groq.com/openai/v1/chat/completions",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${apiKey}`,
+        },
+        body: JSON.stringify({
+          model: image
+            ? "meta-llama/llama-4-scout-17b-16e-instruct"
+            : "llama3-70b-8192",
+          messages: messages,
+        }),
+      }
+    );
 
-    const completion = await groq.chat.completions.create({
-      model: hasImage
-        ? process.env.VISION_MODEL || 'meta-llama/llama-4-scout-17b-16e-instruct'
-        : process.env.TEXT_MODEL || 'openai/gpt-oss-20b',
-      messages: chatMessages,
-      temperature: 0.7,
-      max_completion_tokens: 1400
-    });
+    const data = await res.json();
 
-    const text = completion.choices?.[0]?.message?.content || 'Maaf, saya belum bisa menjawab sekarang.';
+    const reply =
+      data?.choices?.[0]?.message?.content ||
+      "Tidak ada balasan dari AI";
 
-    return NextResponse.json({ text });
-  } catch (error) {
-    const message = error instanceof Error ? error.message : 'Unknown error';
-    return NextResponse.json({ error: message }, { status: 500 });
+    return NextResponse.json({ reply });
+  } catch (err) {
+    return NextResponse.json(
+      { reply: "Server error" },
+      { status: 500 }
+    );
   }
 }
