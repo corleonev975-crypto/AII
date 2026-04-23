@@ -18,79 +18,61 @@ export default function ChatShell() {
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages, loading]);
+  }, [messages]);
 
   const sendMessage = async (text: string, image?: string) => {
     if (!text.trim() && !image) return;
 
-    const nextMessages: Message[] = [
+    const newMessages = [
       ...messages,
-      {
-        role: "user",
-        content: text || "Jelaskan gambar ini",
-        image,
-      },
+      { role: "user", content: text, image },
     ];
 
-    setMessages(nextMessages);
+    setMessages(newMessages);
     setLoading(true);
 
     try {
       const res = await fetch("/api/chat", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          message: text || "Jelaskan gambar ini",
-          image,
-        }),
+        body: JSON.stringify({ message: text, image }),
       });
 
       const data = await res.json();
 
       setMessages([
-        ...nextMessages,
-        {
-          role: "assistant",
-          content: data.reply || "Tidak ada balasan",
-        },
+        ...newMessages,
+        { role: "assistant", content: data.reply },
       ]);
     } catch {
       setMessages([
-        ...nextMessages,
-        {
-          role: "assistant",
-          content: "Terjadi error",
-        },
+        ...newMessages,
+        { role: "assistant", content: "Error AI" },
       ]);
-    } finally {
-      setLoading(false);
     }
+
+    setLoading(false);
   };
 
   return (
     <div className="flex h-screen flex-col bg-black text-white">
-      <div className="flex-1 overflow-y-auto p-4">
-        <div className="mx-auto max-w-3xl space-y-4">
-          {messages.length === 0 && <WelcomeScreen />}
+      <div className="flex-1 overflow-y-auto p-4 space-y-4">
+        {messages.length === 0 && <WelcomeScreen />}
 
-          {messages.map((msg, i) => (
-            <MessageBubble
-              key={i}
-              role={msg.role}
-              content={msg.content}
-              image={msg.image}
-            />
-          ))}
+        {messages.map((msg, i) => (
+          <MessageBubble
+            key={i}
+            role={msg.role}
+            content={msg.content}
+            image={msg.image}
+          />
+        ))}
 
-          {loading && <p className="text-white/50">Typing...</p>}
+        {loading && <p>Typing...</p>}
 
-          <div ref={bottomRef} />
-        </div>
+        <div ref={bottomRef} />
       </div>
 
-      <ChatInput onSend={sendMessage} disabled={loading} />
+      <ChatInput onSend={sendMessage} />
     </div>
   );
-      }
+}
